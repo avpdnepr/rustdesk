@@ -1,0 +1,42 @@
+//! VictorIsCool client branding and self-hosted server defaults.
+//!
+//! These defaults are applied from the shared Rust layer, so the same
+//! configuration is used by Windows, Linux, macOS, and Android builds.
+
+use hbb_common::config;
+use std::sync::Once;
+
+pub const APP_NAME: &str = "VictorIsCool";
+pub const ID_SERVER: &str = "217.24.161.103";
+pub const RELAY_SERVER: &str = "217.24.161.103";
+pub const PUBLIC_KEY: &str = "kNaWnMAVkriT2rFWeeLn5/WrP2aVJMJiq2KBATs8FV4=";
+pub const DEFAULT_LANGUAGE: &str = "uk";
+pub const SUPPORTED_LANGUAGES: &[&str] = &["de", "en", "uk"];
+
+static APPLY_DEFAULTS: Once = Once::new();
+
+/// Apply VictorIsCool defaults once per process.
+///
+/// The settings remain user-configurable because they are registered as
+/// defaults rather than override/hard settings. A signed custom client config,
+/// command-line import, or a user-selected value can still replace them.
+pub fn apply_defaults() {
+    APPLY_DEFAULTS.call_once(|| {
+        *config::APP_NAME.write().unwrap() = APP_NAME.to_owned();
+
+        {
+            let mut defaults = config::DEFAULT_SETTINGS.write().unwrap();
+            defaults.insert(
+                "custom-rendezvous-server".to_owned(),
+                ID_SERVER.to_owned(),
+            );
+            defaults.insert("relay-server".to_owned(), RELAY_SERVER.to_owned());
+            defaults.insert("key".to_owned(), PUBLIC_KEY.to_owned());
+        }
+
+        {
+            let mut local_defaults = config::DEFAULT_LOCAL_SETTINGS.write().unwrap();
+            local_defaults.insert("lang".to_owned(), DEFAULT_LANGUAGE.to_owned());
+        }
+    });
+}

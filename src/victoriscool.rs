@@ -10,7 +10,7 @@ pub const APP_NAME: &str = "VictorIsCool";
 pub const BRAND_PRIMARY_COLOR: &str = "#1565C0";
 pub const ID_SERVER: &str = "217.24.161.103";
 pub const RELAY_SERVER: &str = "217.24.161.103";
-pub const PUBLIC_KEY: &str = "3B3EWJ8QTowzVnPHzpindzblFEv+9htHukMScoj33qI=";
+pub const PUBLIC_KEY: &str = "YQiOvC0OOyIJ1wT4v0SZs7YwLZWxEfkW8ZtzRMSdnUA=";
 pub const DEFAULT_LANGUAGE: &str = "uk";
 pub const SUPPORTED_LANGUAGES: &[&str] = &["de", "en", "uk"];
 

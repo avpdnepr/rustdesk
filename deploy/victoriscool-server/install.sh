@@ -23,6 +23,12 @@ docker compose version >/dev/null 2>&1 || { echo "Docker Compose plugin is requi
 chmod 600 .env data/id_ed25519
 chmod 644 data/id_ed25519.pub
 
+if command -v ufw >/dev/null; then
+  ufw allow 21115:21119/tcp
+  ufw allow 21116/udp
+  ufw allow 8080/tcp
+fi
+
 docker compose -f compose.yml pull
 docker compose -f compose.yml up -d --build
 

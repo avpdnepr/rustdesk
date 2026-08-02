@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>VictorIsCool Server</title>
+  <style>
+    :root{color-scheme:dark;--blue:#1565c0;--blue2:#0d47a1;--ok:#4caf50;--bad:#ef5350}
+    *{box-sizing:border-box}body{margin:0;font-family:Inter,Arial,sans-serif;background:#08111f;color:#eef5ff}
+    header{padding:28px 36px;background:linear-gradient(135deg,var(--blue2),var(--blue))}
+    h1{margin:0 0 6px;font-size:30px}main{max-width:1100px;margin:auto;padding:28px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px}
+    .card{background:#111d2e;border:1px solid #233a58;border-radius:14px;padding:18px}
+    .status{display:inline-flex;align-items:center;gap:8px;font-weight:700}.dot{width:11px;height:11px;border-radius:50%;background:#78909c}
+    .online .dot{background:var(--ok);box-shadow:0 0 12px var(--ok)}.offline .dot{background:var(--bad)}
+    code{display:block;overflow-wrap:anywhere;background:#08111f;padding:12px;border-radius:8px}
+    button,a.button{border:0;border-radius:9px;padding:11px 15px;background:var(--blue);color:white;font-weight:700;cursor:pointer;text-decoration:none;display:inline-block;margin:6px 8px 0 0}
+    small{color:#a9bdd4}
+  </style>
+</head>
+<body>
+<header><h1>VictorIsCool Server</h1><div>RustDesk OSS operations dashboard</div></header>
+<main>
+  <div class="grid" id="services"></div>
+  <section class="card" style="margin-top:16px">
+    <h2>Конфігурація клієнта</h2>
+    <p>ID server: <strong id="server">—</strong></p>
+    <p>Relay server: <strong id="relay">—</strong></p>
+    <small>Public key</small><code id="key">—</code>
+    <button onclick="copyKey()">Копіювати ключ</button>
+    <a class="button" href="/api/config">Завантажити JSON</a>
+    <button onclick="loadAll()">Оновити статус</button>
+  </section>
+  <section class="card" style="margin-top:16px">
+    <h2>Мережеві порти</h2>
+    <p>TCP: 21115–21119. UDP: 21116.</p>
+    <small>Це окрема OSS-панель стану, а не RustDesk Server Pro Console.</small>
+  </section>
+</main>
+<script>
+async function loadAll(){const[s,k]=await Promise.all([fetch('/api/status').then(r=>r.json()),fetch('/api/key').then(r=>r.json())]);document.getElementById('server').textContent=s.server;document.getElementById('relay').textContent=s.server;document.getElementById('key').textContent=k.public_key||'Недоступний';document.getElementById('services').innerHTML=Object.entries(s.services).map(([name,v])=>`<div class="card"><h3>${name}</h3><div class="status ${v.online?'online':'offline'}"><span class="dot"></span>${v.online?'ONLINE':'OFFLINE'}</div><p>TCP ${v.port}</p></div>`).join('')}
+function copyKey(){navigator.clipboard.writeText(document.getElementById('key').textContent)}
+loadAll().catch(()=>document.getElementById('services').innerHTML='<div class="card">Помилка завантаження статусу</div>')
+</script>
+</body></html>

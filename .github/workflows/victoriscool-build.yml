@@ -21,8 +21,11 @@ concurrency:
   group: victoriscool-client-build-${{ github.repository }}-${{ github.ref }}
   cancel-in-progress: true
 
+# The reusable build workflow creates a GitHub Release and uploads the finished
+# platform packages. Reusable workflows cannot elevate the caller token, so
+# contents write access must be granted here.
 permissions:
-  contents: read
+  contents: write
   actions: write
 
 jobs:

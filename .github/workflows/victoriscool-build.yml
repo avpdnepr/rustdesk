@@ -1,13 +1,25 @@
 name: Build VictorIsCool clients
+run-name: Build VictorIsCool clients (${{ inputs.upload_tag }})
 
+# This release workflow is intentionally manual. The repository already runs
+# its regular CI and Full Flutter CI workflows on pushes and pull requests.
+# Starting the complete multi-platform matrix again on every release-branch
+# push creates duplicate Windows, Linux, macOS and Android jobs and can exhaust
+# GitHub-hosted runner retries.
 on:
   workflow_dispatch:
     inputs:
       upload_tag:
         description: Artifact/release tag label
-        required: false
-        default: victoriscool
+        required: true
+        default: victoriscool-1.0.0
         type: string
+
+# Keep only one release build per branch. Starting a newer manual build cancels
+# an older stale run instead of running two complete platform matrices at once.
+concurrency:
+  group: victoriscool-client-build-${{ github.repository }}-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read

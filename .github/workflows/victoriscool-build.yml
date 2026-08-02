@@ -1,0 +1,22 @@
+name: Build VictorIsCool clients
+
+on:
+  workflow_dispatch:
+    inputs:
+      upload_tag:
+        description: Artifact/release tag label
+        required: false
+        default: victoriscool
+        type: string
+
+permissions:
+  contents: read
+  actions: write
+
+jobs:
+  build-clients:
+    uses: ./.github/workflows/flutter-build.yml
+    with:
+      upload-artifact: true
+      upload-tag: ${{ inputs.upload_tag }}
+    secrets: inherit

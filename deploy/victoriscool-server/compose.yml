@@ -1,0 +1,39 @@
+services:
+  hbbs:
+    container_name: victoriscool-hbbs
+    image: ${RUSTDESK_IMAGE}
+    command: hbbs -r ${SERVER_HOST}:21117
+    volumes:
+      - ./data:/root
+    network_mode: host
+    restart: unless-stopped
+    environment:
+      RUST_LOG: info
+
+  hbbr:
+    container_name: victoriscool-hbbr
+    image: ${RUSTDESK_IMAGE}
+    command: hbbr
+    volumes:
+      - ./data:/root
+    network_mode: host
+    restart: unless-stopped
+    environment:
+      RUST_LOG: info
+
+  web:
+    container_name: victoriscool-web
+    build:
+      context: ./web
+    environment:
+      SERVER_HOST: ${SERVER_HOST}
+      ADMIN_USER: ${ADMIN_USER}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      WEB_PORT: ${WEB_PORT}
+    volumes:
+      - ./data:/data:ro
+    network_mode: host
+    restart: unless-stopped
+    depends_on:
+      - hbbs
+      - hbbr

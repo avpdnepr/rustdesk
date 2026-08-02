@@ -36,6 +36,22 @@ pub mod flutter;
 #[cfg(any(target_os = "android", target_os = "ios", feature = "flutter"))]
 pub mod flutter_ffi;
 use common::*;
+mod victoriscool;
+
+/// Load the regular RustDesk custom-client configuration after installing the
+/// VictorIsCool defaults shared by desktop and mobile builds.
+pub fn load_custom_client() {
+    victoriscool::apply_defaults();
+    common::load_custom_client();
+}
+
+/// Apply VictorIsCool defaults even when Flutter passes a signed custom-client
+/// configuration directly to the Rust layer.
+pub fn read_custom_client(config: &str) {
+    victoriscool::apply_defaults();
+    common::read_custom_client(config);
+}
+
 mod auth_2fa;
 #[cfg(not(target_os = "ios"))]
 mod clipboard;

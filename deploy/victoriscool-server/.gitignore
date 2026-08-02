@@ -1,0 +1,4 @@
+.env
+data/id_ed25519
+backups/
+web/__pycache__/

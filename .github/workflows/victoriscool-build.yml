@@ -11,6 +11,7 @@ on:
   push:
     branches:
       - "release/victoriscool-*"
+      - "victor/clients-*"
 
 permissions:
   contents: read
